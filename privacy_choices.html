@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PtoP - プライバシー選択</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #007AFF;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            background-color: #fafbfc;
+        }
+        
+        .section h2 {
+            color: #007AFF;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .choice-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            margin: 15px 0;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .choice-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .choice-info {
+            flex: 1;
+        }
+        
+        .choice-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .choice-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 34px;
+            background-color: #ccc;
+            border-radius: 34px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background-color: #007AFF;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+        
+        .save-button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+        }
+        
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
+        }
+        
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .info-box h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+        
+        .contact-section {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 2px solid #e9ecef;
+            margin-top: 40px;
+        }
+        
+        .contact-section h3 {
+            color: #007AFF;
+            margin-bottom: 15px;
+        }
+        
+        .contact-email {
+            color: #007AFF;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .contact-email:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .choice-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .toggle-switch {
+                margin-top: 15px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PtoP</h1>
+            <p>プライバシー設定とデータ使用の選択</p>
+        </div>
+        
+        <div class="info-box">
+            <h3>📋 このページについて</h3>
+            <p>このページでは、PtoPアプリでのデータ使用について選択できます。あなたのプライバシーを尊重し、透明性を保つために、どのデータがどのように使用されるかを明確にしています。</p>
+        </div>
+        
+        <div class="section">
+            <h2>🔍 アナリティクスとパフォーマンス</h2>
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">クラッシュレポート</div>
+                    <div class="choice-description">アプリの安定性向上のため、クラッシュ情報を匿名で収集します</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'crash_reports')"></div>
+            </div>
+            
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">パフォーマンスデータ</div>
+                    <div class="choice-description">アプリの動作速度や使用状況を匿名で分析します</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'performance_data')"></div>
+            </div>
+            
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">使用統計</div>
+                    <div class="choice-description">機能の使用頻度を匿名で収集し、改善に活用します</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'usage_stats')"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📱 デバイス情報</h2>
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">デバイス識別子</div>
+                    <div class="choice-description">アプリの正常動作のため、デバイス情報を収集します</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'device_id')"></div>
+            </div>
+            
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">OS情報</div>
+                    <div class="choice-description">iOSバージョンなどの基本情報を収集します</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'os_info')"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>💳 サブスクリプション情報</h2>
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">購入履歴</div>
+                    <div class="choice-description">サブスクリプション管理のため、購入情報を処理します</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'purchase_history')"></div>
+            </div>
+            
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">Apple ID情報</div>
+                    <div class="choice-description">Appleが管理する支払い情報を処理します</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'apple_id')"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>☁️ iCloud同期</h2>
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">データ同期</div>
+                    <div class="choice-description">iCloudを使用したPDFとフォルダの同期（ユーザーが有効にした場合）</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleChoice(this, 'icloud_sync')"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📧 お問い合わせ</h2>
+            <div class="choice-item">
+                <div class="choice-info">
+                    <div class="choice-title">メールアドレス</div>
+                    <div class="choice-description">お問い合わせ時のメールアドレス（任意提供）</div>
+                </div>
+                <div class="toggle-switch" onclick="toggleChoice(this, 'email_contact')"></div>
+            </div>
+        </div>
+        
+        <button class="save-button" onclick="saveChoices()">
+            💾 設定を保存
+        </button>
+        
+        <div class="info-box">
+            <h3>ℹ️ 重要な注意事項</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>PDFファイルの内容は一切収集・保存されません</li>
+                <li>フォルダ名やファイル名はローカルにのみ保存されます</li>
+                <li>個人を特定できる情報は収集しません</li>
+                <li>すべてのデータは暗号化されて安全に処理されます</li>
+                <li>設定はいつでも変更できます</li>
+            </ul>
+        </div>
+        
+        <div class="contact-section">
+            <h3>お問い合わせ</h3>
+            <p>プライバシー設定についてご質問がございましたら、お気軽にお問い合わせください。</p>
+            <a href="mailto:igafactory2023@gmail.com?subject=PtoPプライバシー設定について" class="contact-email">
+                igafactory2023@gmail.com
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 igafactory. All rights reserved.</p>
+            <p>最終更新日: 2025年6月25日</p>
+        </div>
+    </div>
+    
+    <script>
+        // 選択状態を管理
+        let choices = {
+            crash_reports: true,
+            performance_data: true,
+            usage_stats: true,
+            device_id: true,
+            os_info: true,
+            purchase_history: true,
+            apple_id: true,
+            icloud_sync: true,
+            email_contact: false
+        };
+        
+        // トグルスイッチの切り替え
+        function toggleChoice(element, choiceKey) {
+            element.classList.toggle('active');
+            choices[choiceKey] = element.classList.contains('active');
+        }
+        
+        // 設定の保存
+        function saveChoices() {
+            // 実際のアプリでは、ここでサーバーに設定を送信
+            const message = `設定が保存されました！\n\n選択された設定:\n${Object.entries(choices).map(([key, value]) => 
+                `${key}: ${value ? '有効' : '無効'}`
+            ).join('\n')}`;
+            
+            alert(message);
+            
+            // ローカルストレージに保存（デモ用）
+            localStorage.setItem('ptop_privacy_choices', JSON.stringify(choices));
+            
+            // ボタンのテキストを一時的に変更
+            const button = document.querySelector('.save-button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ 保存完了！';
+            button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(135deg, #007AFF, #5856D6)';
+            }, 2000);
+        }
+        
+        // ページ読み込み時に保存された設定を復元
+        window.onload = function() {
+            const savedChoices = localStorage.getItem('ptop_privacy_choices');
+            if (savedChoices) {
+                choices = JSON.parse(savedChoices);
+                
+                // 保存された設定に基づいてトグルスイッチを設定
+                Object.entries(choices).forEach(([key, value]) => {
+                    const element = document.querySelector(`[onclick*="${key}"]`);
+                    if (element) {
+                        if (value) {
+                            element.classList.add('active');
+                        } else {
+                            element.classList.remove('active');
+                        }
+                    }
+                });
+            }
+        };
+    </script>
+</body>
+</html> 
